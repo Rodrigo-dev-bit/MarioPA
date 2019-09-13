@@ -1,14 +1,23 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-let g = 0.15;
+let g = 0.08;
 let u = -0.05;
 let mi =0.05;
 let time = 0;
 let ax =1;
-let VX = 3;
+let VX = 5;
 let VY= -7;
 let h = 600; //altura do canvas
 let c = 100; //tamanho do chão
+let Tx = 400;
+let Ty =300;
+let Tw= 100;
+let	Th= 50;
+//let Bx=0;
+//let By=500;
+//let Bw=100;
+//let Bh=100;
+//para ficar no chão, Ty+Th tem que ser igual a 500
 //quando l =30 a altura maxima eh 275.5(?)
 //quando l = 60 a altura máxima eh 241.125(?)
 //quando l =90 a altura máxima eh 410.5 (?)
@@ -36,9 +45,15 @@ function piso (){
 //}
 function tubo(){
     ctx.save();
-    ctx.fillStyle ="#00FF00"
-    ctx.fillRect(200,400,50,100)
+    ctx.fillStyle ="#00FF00";
+    ctx.fillRect(Tx,Ty,Tw,Th);
     ctx.restore();
+}
+	function buraco(){
+	ctx.save();
+	ctx.fillStyle ="#5eb4dd";
+	ctx.fillRect(Bx,By,Bw,Bh);
+	ctx.restore();
 }
 // a primeira é a coordenada x do canto superior esquerdo do cano
 // a segunda é a coordenada y do canto superior esquerdo
@@ -54,39 +69,43 @@ function Mario(){
         this.x += this.vx;
         this.y += this.vy;
 		this.vy += g;
-        if (this.x >= 200-this.l && this.x< 201 && this.y >= 381){
+		if (this.x<=0){
+			this.vx=0
+			this.x=0
+        }if (this.x >= Tx-this.l && this.x< Tx+1 && this.y >= Ty-this.l+1&& this.y <=Ty+Th){
             this.vx =0;
-            this.x = 200-this.l;
+            this.x = Tx-this.l;
             //colisão com o cano na esquerda
-        }else if(this.x <=250 && this.x>=240 && this.y >=381){
+        }else if(this.x <=Tx+Tw && this.x>=Tx+Tw-10 && this.y >=Ty-this.l+1 &&this.y <=Ty+Th){
             this.vx= 0;
-            this.x = 250;
+            this.x = Tx+Tw;
             //colisão com o cano na direita
-        }if (this.y >=380 &&this.x >200 -this.l && this.x <250 && this.vx>0){
+        }else if (this.y >=Ty-this.l &&this.x >Tx -this.l && this.x <Tx+Tw && this.vx>0 && this.y <=Ty+Th){
             this.vy=0;
-            this.y=380;
+            this.y=Ty-this.l;
             this.vx +=u;  
             //atrito prum lado, caso mario esteja em cima do cano
-        }else if (this.y >=380 && this.x >200 -this.l && this.x <250 && this.vx<0){
+        }else if (this.y >=Ty-this.l && this.x >Tx -this.l && this.x <Tx+Tw && this.vx<0 && this.y <=Ty+Th){
             this.vy=0;
-            this.y=380;
+            this.y=Ty-this.l;
             this.vx +=mi;
             //atrito pro outro lado, caso mario esteja em cima do cano
-        }else if (this.y >=380 && this.x >200 -this.l && this.x <250 && this.vx ==0){ 
+        }else if (this.x >Tx -this.l && this.x <Tx+Tw  && this.y <=Ty+Th&& this.y >=Ty+Th-10){ 
+            this.vy=0.01;
+			this.vy+=g;
+            this.y=Ty+Th;
+			//se o mario pular debaixo do cano, terá vy 0 e não mudará de lugar
+        }if (this.y >=Ty-this.l && this.x >Tx -this.l && this.x <Tx+Tw  && this.y <=Ty+Th-10){ 
             this.vy=0;
-            this.y=380;
-            this.vx+=mi;
-            this.vx+=u;
-            // se velocidade x for 0 n há atrito
-        }if(this.y >= h-c-this.l){
+            this.y=Ty-this.l;
+			//se o mario estiver em cima do cano, vy=0 e ele fica em cima do cano, não indo para baixo
+			//ERRO AQUI
+        }else if(this.y >= h-c-this.l){
 			this.vy=0;
 			this.y = h-c-this.l;
-            //se ele estiver em cima do cano,vy=0 e ele fica em cima do cano,não indo pra baixo
+            //se ele estiver em cima do chão,vy=0 e ele fica em cima do chão,não indo pra baixo
         }if(Math.abs(this.vx)<=0.061){
          this.vx = 0;   //tirar o atrito "residual" ------C=====3
-        }else if(this.vx ==0){
-            this.vx +=mi;
-            this.vx +=u;
         }else if(this.vx<=-VX && this.y == h-c  -this.l){
             this.vx = -VX;
             this.vx +=mi;
@@ -122,7 +141,7 @@ function Mario(){
         }else if(event.keyCode =='32' && this.vy == 0){
             this.vy=VY;
         }
-        console.log(this.x)
+        console.log(this.y)
      } 
       }
 function run (){
@@ -135,5 +154,5 @@ function run (){
 	mario.draw();
 	piso();
     tubo();
-    sol();
+    //sol();
 }
