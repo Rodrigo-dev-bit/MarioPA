@@ -162,6 +162,7 @@ function run (){
 	ctx.clearRect (0,0,canvas.width , canvas.height);
 	mario.move();
 	piso();
+	tri();
     	tubo();
 	sol();
 	buraco();
