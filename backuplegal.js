@@ -9,10 +9,10 @@ let VX = 5;
 let VY= -7;
 let h = 600; //altura do canvas
 let c = 100; //tamanho do chão
-let Tx = 400;
-let Ty =300;
-let Tw= 100;
-let	Th= 50;
+let Tx = 400;//coordenada x do canto superior esquerdo do tubo
+let Ty =300;//coordenada y do canto superior esquerdo do tubo
+let Tw= 100;// comprimento do cano
+let Th= 50;//altura do cano
 //let Bx=0;
 //let By=500;
 //let Bw=100;
@@ -27,13 +27,17 @@ function init (){
 	let mario = new Mario();
 	mario.draw()
 	piso();
-	window.setInterval(run, 0.5);
+	window.setInterval(run, 0.5);//milisegundos
 }
 function piso (){
 	ctx.save();
 	ctx.fillStyle = "#8B5143";
 	ctx.fillRect(0, 500, 5000, 100);
 	ctx.restore();
+	let l =20;
+	for(var i =0; i<=5000;i+=l){
+	tri(i,500,l)			
+}
 }
 //function sol(){
   //  ctx.save();
@@ -49,7 +53,19 @@ function tubo(){
     ctx.fillRect(Tx,Ty,Tw,Th);
     ctx.restore();
 }
-	function buraco(){
+
+function tri(x,y,l){
+	ctx.beginPath();
+	ctx.moveTo(x,y);
+	ctx.lineTo(x+l,y);
+	ctx.lineTo(x+l/2,y+Math.sqrt(3)*l/2);
+	ctx.lineTo(x,y);
+	ctx.fillStyle ="#228b22";
+	ctx.fill();
+	ctx.closePath();	
+}
+
+function buraco(){
 	ctx.save();
 	ctx.fillStyle ="#5eb4dd";
 	ctx.fillRect(Bx,By,Bw,Bh);
@@ -123,18 +139,12 @@ function Mario(){
     }   
 	this.draw = function(){
 		ctx.beginPath();
-		ctx.fillstyle = "#E6E6FA";
+		ctx.fillstyle = "#000000";
 		ctx.fillRect(this.x, this.y, this.l, this.l);
 		ctx.closePath();
 	}	
 	this.jump = function(){
-		if(event.keyCode == '68'&& event.keyCode =='32'&& this.vy==0){
-			this.vx += ax;
-            this.vy = VY
-        }else  if(event.keyCode =='65'&& event.keyCode =='32'&& this.vy ==0){
-            this.vx -= ax;
-            this.vy =VY;
-        }else if(event.keyCode == '68'){
+	if(event.keyCode == '68'){
             this.vx  += ax;
         }else if(event.keyCode =='65'){
             this.vx-=ax;
@@ -142,17 +152,13 @@ function Mario(){
             this.vy=VY;
         }
         console.log(this.y)
-     } 
+     	} 
       }
 function run (){
-	time +=5;
+	time +=5; //por enquanto inútil
 	ctx.clearRect (0,0,canvas.width , canvas.height);
-	// if((time + Math.random()*3000+2000)% == 0){ // a cada 2-5 segundos um cano spawna
-		// let cano = new Cano (Math.random()*canvas.height 
-	// }
 	mario.move();
 	mario.draw();
 	piso();
-    tubo();
-    //sol();
+    	tubo();
 }
