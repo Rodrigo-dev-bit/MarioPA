@@ -128,15 +128,15 @@ function Mario(){
 		ctx.closePath();
 	}	
 	this.jump = function(){
-		if(event.keyCode == '54'&& event.keyCode =='32'&& this.vy==0){
+		if(event.keyCode == '68'&& event.keyCode =='32'&& this.vy==0){
 			this.vx += ax;
             this.vy = VY
-        }else  if(event.keyCode =='53'&& event.keyCode =='32'&& this.vy ==0){
+        }else  if(event.keyCode =='65'&& event.keyCode =='32'&& this.vy ==0){
             this.vx -= ax;
             this.vy =VY;
-        }else if(event.keyCode == '54'){
+        }else if(event.keyCode == '68'){
             this.vx  += ax;
-        }else if(event.keyCode =='53'){
+        }else if(event.keyCode =='65'){
             this.vx-=ax;
         }else if(event.keyCode =='32' && this.vy == 0){
             this.vy=VY;
