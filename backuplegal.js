@@ -39,14 +39,15 @@ function piso (){
 	tri(i,500,l)			
 }
 }
-//function sol(){
-  //  ctx.save();
-    //ctx.beginPath();
-    //ctx.arc(100,75,50,0,2*Math.PI);
-    //ctx.fillStyle ="#FFFF00";
-    //ctx.stroke();
-    //ctx.restore();
-//}
+function sol(){
+   ctx.save();
+   ctx.beginPath();
+   ctx.arc(100,75,50,0,2*Math.PI);
+   ctx.fillStyle ="#FFFF00";
+   ctx.stroke();
+	ctx.fill();
+   ctx.restore();
+}
 function tubo(){
     ctx.save();
     ctx.fillStyle ="#00FF00";
@@ -69,6 +70,8 @@ function buraco(){
 	ctx.save();
 	ctx.fillStyle ="#5eb4dd";
 	ctx.fillRect(Bx,By,Bw,Bh);
+	ctx.stroke();
+	ctx.fill();
 	ctx.restore();
 }
 // a primeira é a coordenada x do canto superior esquerdo do cano
@@ -116,7 +119,7 @@ function Mario(){
             this.y=Ty-this.l;
 			//se o mario estiver em cima do cano, vy=0 e ele fica em cima do cano, não indo para baixo
 			//ERRO AQUI
-        }else if(this.y >= h-c-this.l){
+        }else if(this.y >= h-c-this.l && ((this.x<Bx || this.x>Bx+Bw-this.l+0.1)&&this.y<499)){
 			this.vy=0;
 			this.y = h-c-this.l;
             //se ele estiver em cima do chão,vy=0 e ele fica em cima do chão,não indo pra baixo
@@ -158,7 +161,9 @@ function run (){
 	time +=5; //por enquanto inútil
 	ctx.clearRect (0,0,canvas.width , canvas.height);
 	mario.move();
-	mario.draw();
 	piso();
     	tubo();
+	sol();
+	buraco();
+	mario.draw();
 }
