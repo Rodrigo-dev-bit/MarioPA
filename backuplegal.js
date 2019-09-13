@@ -27,7 +27,7 @@ function init (){
 	let mario = new Mario();
 	mario.draw()
 	piso();
-	window.setInterval(run, 0.5);//milisegundos
+	window.setInterval(run, 2);//milisegundos
 }
 function piso (){
 	ctx.save();
