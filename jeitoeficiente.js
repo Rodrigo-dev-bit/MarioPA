@@ -12,16 +12,13 @@ let c = 100; //tamanho do chão
 let Tx = 400; 
 let Ty =300;
 let Tw= 100;
-let	Th= 50;
+let Th= 50;
 let canos =[];
-//let Bx=0;
-//let By=500;
-//let Bw=100;
-//let Bh=100;
+let Bx=0;
+let By=500;
+let Bw=100;
+let Bh=100;
 //para ficar no chão, Ty+Th tem que ser igual a 500
-//quando l =30 a altura maxima eh 275.5(?)
-//quando l = 60 a altura máxima eh 241.125(?)
-//quando l =90 a altura máxima eh 410.5 (?)
 let mario = new Mario();
 
 function criaCanos(){
@@ -53,14 +50,15 @@ function piso (){
 		
 }
 }
-//function sol(){
-  //  ctx.save();
-    //ctx.beginPath();
-    //ctx.arc(100,75,50,0,2*Math.PI);
-    //ctx.fillStyle ="#FFFF00";
-    //ctx.stroke();
-    //ctx.restore();
-//}
+function sol(){
+   ctx.save();
+   ctx.beginPath();
+   ctx.arc(100,75,50,0,2*Math.PI);
+   ctx.fillStyle ="#FFFF00";
+   ctx.stroke();
+	ctx.fill();
+   ctx.restore();
+}
 function tubo(){
     ctx.save();
     ctx.fillStyle ="#00FF00";
@@ -129,12 +127,12 @@ function Mario(){
 				this.vx= 0;
 				this.x = Tx+Tw;
 				//colisão com o cano na direita
-			}else if (this.y >=Ty-this.l &&this.x >Tx -this.l && this.x <Tx+Tw && this.vx>0 && this.y <=Ty+Th){
+			}else if (this.y >=Ty-this.l &&this.x >Tx -this.l && this.x <Tx+Tw && this.vx>0 && this.y <=Ty+Th-10){
 				this.vy=0;
 				this.y=Ty-this.l;
 				this.vx +=u;  
 				//atrito prum lado, caso mario esteja em cima do cano
-			}else if (this.y >=Ty-this.l && this.x >Tx -this.l && this.x <Tx+Tw && this.vx<0 && this.y <=Ty+Th){
+			}else if (this.y >=Ty-this.l && this.x >Tx -this.l && this.x <Tx+Tw && this.vx<0 && this.y <=Ty+Th-10){
 				this.vy=0;
 				this.y=Ty-this.l;
 				this.vx +=mi;
@@ -151,14 +149,15 @@ function Mario(){
 				this.vy=0;
 				this.y=Ty-this.l;
 				//se o mario estiver em cima do cano, vy=0 e ele fica em cima do cano, não indo para baixo
-				//ERRO AQUI
+				//ERRO consertado
 			}
 		}
 		
-		if(this.y >= h-c-this.l){
+		if(this.y >= h-c-this.l && (this.x <Bx || this.x >Bx +Bw)){
 			this.vy=0;
 			this.y = h-c-this.l;
-            //se ele estiver em cima do chão,vy=0 e ele fica em cima do chão,não indo pra baixo
+           	//se ele estiver em cima do chão,vy=0 e ele fica em cima do chão,não indo pra baixo
+		//se ele estiver em cima do buraco, cai
         }
 		
 		if(Math.abs(this.vx)<=0.061){
@@ -166,9 +165,9 @@ function Mario(){
         }else if(this.vx<=-VX && this.y == h-c  -this.l){
             this.vx = -VX;
             this.vx +=mi;
-        }else if (this.vx >=-VX && this.vx<-0.01 && this.y == h-c-this.l){
+        }else if (this.vx >=-VX && this.vx<-0.01 && this.y >= h-c-this.l){
             this.vx +=mi;
-        }else if(this.vx >0.01 && this.vx <=VX && this.y ==h-c-this.l){
+        }else if(this.vx >0.01 && this.vx <=VX && this.y >=h-c-this.l){
             this.vx +=u; 
         }else if (this.vx >=VX && this.y == h-c-this.l){
             this.vx = VX;
@@ -199,8 +198,10 @@ function run (){
 	time +=5;//milisegundos (por enquanto inútil)
 	ctx.clearRect (0,0,canvas.width , canvas.height);
 	mario.move();
-	mario.draw();
 	piso();
-    tubo();
-    //sol();
+	tri();
+	tubo();
+	sol();
+	buraco();
+	mario.draw();
 }
