@@ -9,29 +9,23 @@ let VX = 5;
 let VY= -7;
 let h = 600; //altura do canvas
 let c = 100; //tamanho do chão
-let Tx = 400; 
-let Ty =300;
-let Tw= 100;
-let Th= 50;
 let canos =[];
-let Bx=0;
-let By=500;
-let Bw=100;
-let Bh=100;
+//let Bx=300;
+//let By=500;
+//let Bw=100;
+//let Bh=100;
 //para ficar no chão, Ty+Th tem que ser igual a 500
 let mario = new Mario();
 
 function criaCanos(){
-	let cano1 = new Cano(150, 680, 40, 80, "#00FF00");
-	let cano2 = new Cano(50, 680, 45, 90, "#00FF00");
+	let cano1 = new Cano(100, 680, 40, 80, "#00FF00");
+	let cano2 = new Cano(200, 680, 45, 90, "#00FF00");
 	canos.push(cano1, cano2)
+    console.log(canos);
 }
-
-
-
 function init (){
+    criaCanos();
 	document.getElementById("button").style= "display: none";
-	array = [];
 	ctx.clearRect(0,0,canvas.width,canvas.height);
 	let mario = new Mario();
 	mario.draw()
@@ -59,29 +53,20 @@ function sol(){
 	ctx.fill();
    ctx.restore();
 }
-//function tubo(){
-  //  ctx.save();
-   // ctx.fillStyle ="#00FF00";
-    //ctx.fillRect(Tx,Ty,Tw,Th);
-    //ctx.restore();
-//}
-
 function Cano(xC, yC, wC, hC, corC){
 	this.x = xC;
 	this.y = yC;
 	this.w = wC;
 	this.h = hC;
 	this.cor = corC;
-	this.draw(){
-		ctx.save();
+	this.draw =function(){
+		ctx.beginPath();
 		ctx.fillStyle = this.cor;
 		ctx.fillRect(this.x, this.y, this.w, this.h);
-		ctx.restore();
+		ctx.closePath();
+    
 	}
 }
-
-
-
 function tri(x,y,l){
 	ctx.beginPath();
 	ctx.moveTo(x,y);
@@ -92,17 +77,19 @@ function tri(x,y,l){
 	ctx.fill();
 	ctx.closePath();	
 }
-function buraco(){
-	ctx.save();
-	ctx.fillStyle ="#5eb4dd";
-	ctx.fillRect(Bx,By,Bw,Bh);
-	ctx.restore();
+//function buraco(){
+//	ctx.save();
+//	ctx.fillStyle ="#5eb4dd";
+//	ctx.fillRect(Bx,By,Bw,Bh);
+//	ctx.restore();
 	
-}
+//}
+
 // a primeira é a coordenada x do canto superior esquerdo do cano
 // a segunda é a coordenada y do canto superior esquerdo
 //terceira coisa é comprimento
 //a quarta é a altura
+
 function Mario(){
 	this.x= 100; 
     this.l=20;
@@ -118,46 +105,47 @@ function Mario(){
 			this.x=0
         }
 		for (let i = 0; i< canos.length; i+=5){
-			if (this.x >= canos[i]-this.l && this.x< canos[i]+1 && this.y >= canos[i+1]-this.l+1&& this.y <=canos[i+1]+canos[i+3]){
+			if (this.x >= canos[i].x-this.l && this.x< canos[i].x+1 && this.y >= canos[i].y-this.l+1&& this.y <=canos[i].y+canos[i].h){
 				this.vx =0;
-				this.x = canos[i]-this.l;
+				this.x = canos[i].x-this.l;
 				//colisão com o cano na esquerda
 				//CADA TX SUBSTITUIR POR CANOS.X 
-			}else if(this.x <=canos[i]+canos[i+2] && this.x>=canos[i]+canos[i+2]-10 && this.y >=canos[i+1]-this.l+1 &&this.y <=canos[i+1]+canos[i+3]){
+			}else if(this.x <=canos[i].x+canos[i].w && this.x>=canos[i].x+canos[i].w-10 && this.y >=canos[i].y-this.l+1 &&this.y <=canos[i].y+canos[i].h){
 				this.vx= 0;
-				this.x = canos[i]+canos[i+2];
+				this.x = canos[i].x+canos[i].w;
 				//colisão com o cano na direita
-			}else if (this.y >=canos[i+1]-this.l &&this.x >canos[i] -this.l && this.x <canos[i]+canos[i+2] && this.vx>0 && this.y <=canos[i+1]+canos[i+3]-10){
+			}else if (this.y >=canos[i].y-this.l &&this.x >canos[i].x -this.l && this.x <canos[i].x+canos[i].w && this.vx>0 && this.y <=canos[i].y+canos[i].h-10){
 				this.vy=0;
-				this.y=canos[i+1]-this.l;
+				this.y=canos[i].y-this.l;
 				this.vx +=u;  
 				//atrito prum lado, caso mario esteja em cima do cano
-			}else if (this.y >=canos[i+1]-this.l && this.x >canos[i] -this.l && this.x <canos[i]+canos[i+2] && this.vx<0 && this.y <=canos[i+1]+canos[i+3]-10){
+			}else if (this.y >=canos[i].y-this.l && this.x >canos[i].x -this.l && this.x <canos[i].x+canos[i].w && this.vx<0 && this.y <=canos[i].y+canos[i].h-10){
 				this.vy=0;
-				this.y=canos[i+1]-this.l;
+				this.y=canos[i].y-this.l;
 				this.vx +=mi;
 				//atrito pro outro lado, caso mario esteja em cima do cano
 			}
-			if (this.x >canos[i] -this.l && this.x <canos[i]+canos[i+2]  && this.y <=canos[i+1]+canos[i+3] && this.y >=canos[i+1]+canos[i+3]-10){ 
+			if (this.x >canos[i].x -this.l && this.x <canos[i].x+canos[i].w  && this.y <=canos[i].y+canos[i].h && this.y >=canos[i].y+canos[i].h-10){ 
 				this.vy=0.01;
 				this.vy+=g;
-				this.y=canos[i+1]+canos[i+3];
+				this.y=canos[i].y+canos[i].h;
 				//se o mario pular debaixo do cano, terá vy 0 e não mudará de lugar
 			}
 			
-			if (this.y >=canos[i+1]-this.l && this.x >canos[i] -this.l && this.x <canos[i]+canos[i+2]  && this.y <=canos[i+1]+canos[i+3]-10){ 
+			if (this.y >=canos[i].y-this.l && this.x >canos[i].x -this.l && this.x <canos[i].x+canos[i].w  && this.y <=canos[i].y+canos[i].h-10){ 
 				this.vy=0;
-				this.y=canos[i+1]-this.l;
+				this.y=canos[i].y-this.l;
 				//se o mario estiver em cima do cano, vy=0 e ele fica em cima do cano, não indo para baixo
 				//ERRO consertado
 			}
 		}
 		
-		if(this.y >= h-c-this.l && (this.x <Bx || this.x >Bx +Bw)){
+		if(this.y >= h-c-this.l){
 			this.vy=0;
 			this.y = h-c-this.l;
            	//se ele estiver em cima do chão,vy=0 e ele fica em cima do chão,não indo pra baixo
 		//se ele estiver em cima do buraco, cai
+            //&& (this.x <Bx || this.x >Bx +Bw)
         }
 		
 		if(Math.abs(this.vx)<=0.061){
@@ -190,7 +178,7 @@ function Mario(){
             this.vx -= ax;
         }else if(event.keyCode =='32' && this.vy == 0){
             this.vy=VY;
-        }'
+        }
         console.log(this.y)
      } 
 	}
@@ -202,6 +190,11 @@ function run (){
 	tri();
 	//tubo();
 	sol();
-	buraco();
+    for(let i =0;i<canos.length;i++){
+       canos[i].draw();
+        //console.log("desenhando");
+    }
+
+	//buraco();
 	mario.draw();
 }
