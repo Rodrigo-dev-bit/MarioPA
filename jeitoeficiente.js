@@ -1,12 +1,12 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 let g = 0.08;
-let u = -0.03;
-let mi =0.03;
+let u = -0.03;//atrito1
+let mi =0.03;//atrito2
 let time = 0;
-let ax =1;
-let VX = 5;
-let VY= -7;
+let ax =1;//aceleração
+let VX = 7;//velocidade x máxima
+let VY= -7;//velocidade y
 let h = 600; //altura do canvas
 let c = 100; //tamanho do chão
 let canos =[];
@@ -19,9 +19,9 @@ function criaCanos(){
 	let cano3 = new Cano(500, 350, 80, 150,"#00FF00");//cano original
    	let cano4 = new Cano(900, 350, 80, 150,"#00FF00");
    	let cano5 = new Cano(1300, 350, 80, 150,"#00FF00");
-    	let cano6 = new Cano(1700, 350, 80, 150,"#00FF00");
-	let cano7 = new Cano(800, 100, 200, 100,"#00FF00");
-    	let cano8 = new Cano(60,200,40,30,"#5eb4dd");//dev route
+    let cano6 = new Cano(1700, 350, 80, 150,"#00FF00");
+	let cano7 = new Cano(800, 150, 150, 80,"#00FF00");
+    	let cano8 = new Cano(60,200,40,30,"#5eb4fd");//dev route
 	canos.push(cano1,cano2,cano3,cano4,cano5,cano6,cano7,cano8)
 	canos.push(cano1,cano2,cano3,cano4)
     //console.log(canos);
@@ -49,7 +49,7 @@ function Buraco(xB,wB){
 	this.w=wB;
 	this.draw =function(){
 		ctx.beginPath();
-		ctx.fillStyle ="#5eb4dd";
+		ctx.fillStyle ="#5eb4fd";
 		ctx.fillRect(this.x,500,this.w,100);//altitude, altura e cor são fixas pra diferentes buracos
 		ctx.closePath();
 	}
@@ -62,7 +62,7 @@ function init (){
 	let mario = new Mario();
 	mario.draw()
 	piso();
-	window.setInterval(run, 1);//milisegundos
+	window.setInterval(run, 4);//milisegundos
 }
 function sol(){
    ctx.save();
@@ -71,7 +71,7 @@ function sol(){
    ctx.fillStyle ="#FFFF00";
    ctx.stroke();
 	ctx.fill();
-   ctx.restore();
+   ctx.restore();//desenha o sol
 }
 function tri(x,y,l){
 	ctx.beginPath();
@@ -81,12 +81,12 @@ function tri(x,y,l){
 	ctx.lineTo(x,y);
 	ctx.fillStyle ="#228b22";
 	ctx.fill();
-	ctx.closePath();	
+	ctx.closePath();//desenha a grama
 }
 function piso (){
 	let l =25;
 	for(var i =0; i<=5000;i+=l){
-	tri(i,500,l)		
+	tri(i,500,l)//também desenha a grama, possivelmente redundante		
 	}
 }
 // a primeira é a coordenada x do canto superior esquerdo do cano
@@ -103,19 +103,24 @@ function Mario(){
         this.x += this.vx;
         this.y += this.vy;
 	this.vy += g;
-		if (this.x<=0){
-			this.vx=0
-			this.x=0
-        	}if (this.x>=5000-this.l){
-			this.vx=0;
-			this.x=5000-this.l;
-		}
-		for (let i = 0; i< canos.length; i++){
-			if (this.x >= canos[i].x-this.l && this.x< canos[i].x+1 && this.y >= canos[i].y-this.l+1&& this.y <=canos[i].y+canos[i].h){
+			if (this.x<=0){
+				this.vx=0;
+				this.x=0;
+        	}else if (this.x>=5000-this.l){
+				this.vx=0;
+				this.x=5000-this.l;
+			}else if(this.y<=0 &&this.x<100){
+				this.x=4950;//dev route
+			}else if (this.y>=600-this.l){
+			canos="You Died"
+			sol="You Died" //jeito tosco de fazer o jogo acabar
+			document.getElementById("meuP").innerHTML = canos;
+			}for (let i = 0; i< canos.length; i++){
+			if (this.x >= canos[i].x-this.l && this.x< canos[i].x+1 && this.y >= canos[i].y-this.l+1&& this.y <=canos[i].y+canos[i].h-5){
 				this.vx =0;
 				this.x = canos[i].x-this.l;
 				//colisão com o cano na esquerda
-			}else if(this.x <=canos[i].x+canos[i].w && this.x>=canos[i].x+canos[i].w-10 && this.y >=canos[i].y-this.l+1 &&this.y <=canos[i].y+canos[i].h){
+			}else if(this.x <=canos[i].x+canos[i].w && this.x>=canos[i].x+canos[i].w-10 && this.y >=canos[i].y-this.l+1 &&this.y <=canos[i].y+canos[i].h-5){
 				this.vx= 0;
 				this.x = canos[i].x+canos[i].w;
 				//colisão com o cano na direita
@@ -130,7 +135,7 @@ function Mario(){
 				this.vx +=mi;
 				//atrito pro outro lado, caso mario esteja em cima do cano
 			}
-			if (this.x >canos[i].x -this.l && this.x <canos[i].x+canos[i].w  && this.y <=canos[i].y+canos[i].h && this.y >=canos[i].y+canos[i].h-10){ 
+			if (this.x >=canos[i].x -this.l && this.x <=canos[i].x+canos[i].w  && this.y <=canos[i].y+canos[i].h && this.y >=canos[i].y+canos[i].h-10&&this.vy<0){ 
 				this.vy=0.01;
 				this.vy+=g;
 				this.y=canos[i].y+canos[i].h;
@@ -163,7 +168,7 @@ function Mario(){
 		ctx.beginPath();
 		ctx.fillStyle = "#000000";
 		ctx.fillRect(this.x, this.y, this.l, this.l);
-		ctx.closePath();
+		ctx.closePath();//pinta o Mario
 	}	
 	this.jump = function(){
 	if(event.keyCode == '68'){
@@ -172,8 +177,10 @@ function Mario(){
            	 this.vx -= ax;
         }else if(event.keyCode =='32' && this.vy == 0){
             	this.vy=VY;
+        }else if(event.keyCode =='87' && this.vy == 0){
+            	this.vy=VY;
         }
-       // console.log(this.vx)
+       console.log(this.vy)
      } 
 }
 function run (){
