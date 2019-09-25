@@ -1,8 +1,8 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 let g = 0.08;
-let u = -0.04;
-let mi =0.04;
+let u = -0.03;
+let mi =0.03;
 let time = 0;
 let ax =1;
 let VX = 5;
@@ -14,10 +14,15 @@ let buracos =[];
 //para ficar no chão, Ty+Th tem que ser igual a 500
 let mario = new Mario();
 function criaCanos(){
-	let cano1 = new Cano(-1, 500, 300, 100,"#8B5143");//-1 pro Mario não bugar
-	let cano2 = new Cano(400, 500, 5000, 100,"#8B5143");
-	let cano3 = new Cano(300, 150, 200, 100,"#00FF00");
-	let cano4 = new Cano(600, 100, 200, 100,"#00FF00");
+	let cano1 = new Cano(-1, 500, 300, 100,"#8B5143");//-1 pro Mario não bugar, chão
+	let cano2 = new Cano(400, 500, 5000, 100,"#8B5143");//chão
+	let cano3 = new Cano(500, 350, 80, 150,"#00FF00");//cano original
+   	let cano4 = new Cano(900, 350, 80, 150,"#00FF00");
+   	let cano5 = new Cano(1300, 350, 80, 150,"#00FF00");
+    	let cano6 = new Cano(1700, 350, 80, 150,"#00FF00");
+	let cano7 = new Cano(800, 100, 200, 100,"#00FF00");
+    	let cano8 = new Cano(60,200,40,30,"#5eb4dd");//dev route
+	canos.push(cano1,cano2,cano3,cano4,cano5,cano6,cano7,cano8)
 	canos.push(cano1,cano2,cano3,cano4)
     //console.log(canos);
 }
