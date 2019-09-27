@@ -159,9 +159,6 @@ function Mario(){
         }else if (this.vx >=VX && this.y == h-c-this.l){
             this.vx = VX;
             this.vx +=u;
-        }else if(this.y<h-c-this.l&&this.vx==0){
-            this.vx +=u
-            this.vx +=mi
         }
     }   
 	this.draw = function(){
