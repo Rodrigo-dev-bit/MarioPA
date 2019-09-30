@@ -1,6 +1,6 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-let g = 0.08;
+let g = 0.07;
 let u = -0.05;
 let mi =0.05;
 let time = 0;
